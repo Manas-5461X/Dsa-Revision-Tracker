@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA Tracker Dashboard</title>
+    <!-- Google Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+    
+
+    <!-- Inline Theme Check -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+    </script>
+</head>
+<body>
+    <!-- Global Initial Loading Overlay -->
+    <div id="global-loading" class="global-loading">
+        <i class="ph ph-spinner-gap spin large-icon"></i>
+    </div>
+
+    <!-- Landing Page (Neo-Brutalism) -->
+    <div id="landing-page" class="landing-page neo-brutalism" style="display: none;">
+        <div class="landing-content neo-card">
+            <h1 class="neo-title">DSA TRACKER</h1>
+            <p class="neo-subtitle">Master Data Structures and Algorithms by tracking your progress seamlessly across your Google Sheets.</p>
+            <button id="btn-login" class="btn neo-btn-primary" style="margin-top: 1.5rem;">
+                <i class="ph-fill ph-google-logo"></i> Sign In with Google
+            </button>
+        </div>
+    </div>
+
+    <!-- Dashboard App -->
+    <div id="app" class="dashboard-layout" style="display: none;">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg width="24" height="24" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="40" height="40" rx="8" fill="currentColor"/>
+                        <path d="M12 28V12L20 18L28 12V28" stroke="var(--bg-card)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <strong>DSATracker</strong>
+                    <span>Smart Progress Manager</span>
+                </div>
+            </div>
+
+            <div class="sidebar-banners">
+                <div class="sb-banner">
+                    <i class="ph ph-check-square-offset"></i> <span id="sidebar-stat-completed">0</span> Solved!
+                </div>
+                <div class="sb-banner">
+                    <i class="ph ph-target"></i> <span id="sidebar-stat-remaining">0</span> Remaining
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" id="nav-questions">
+                    <i class="ph ph-squares-four"></i> <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" id="nav-analytics">
+                    <i class="ph ph-chart-line-up"></i> <span>Analytics</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button id="btn-theme-toggle" class="sidebar-btn theme-btn">
+                    <i class="ph ph-moon"></i> <span>Theme</span>
+                </button>
+
+                <div class="quick-stats-sidebar">
+                    <span class="qs-title">QUICK STATS</span>
+                    <div class="qs-grid">
+                        <div class="qs-box">
+                            <span class="qs-val text-primary" id="qs-total">0</span>
+                            <span class="qs-label">Total</span>
+                        </div>
+                        <div class="qs-box">
+                            <span class="qs-val text-success" id="qs-active">0</span>
+                            <span class="qs-label">Done</span>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="#" class="sidebar-btn logout-btn" id="btn-logout-icon">
+                    <i class="ph ph-sign-out"></i> <span>Log Out</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main id="main-content" class="main-content">
+            <header class="topbar">
+                <div class="topbar-actions">
+                    <div id="auth-section" class="auth-section">
+                        <!-- Profile Display -->
+                        <div class="profile-display" id="profile-display" title="Edit Profile">
+                            <div class="avatar"><i class="ph-fill ph-user"></i></div>
+                            <span id="profile-name" class="profile-name">Welcome</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div id="main-scroll-area" class="scroll-area">
+                
+                <!-- View: Questions -->
+                <!-- View: Questions (Dashboard) -->
+                <div id="view-questions" class="dashboard-view active">
+                    <div class="dashboard-header">
+                        <div>
+                            <h1>Dashboard</h1>
+                            <p class="subtitle">Your DSA tracking at a glance</p>
+                        </div>
+                        <div class="dashboard-actions">
+                            <button id="btn-refresh" class="btn btn-secondary"><i class="ph ph-arrows-clockwise"></i> Sync Data</button>
+                        </div>
+                    </div>
+
+                    <div class="tip-banner">
+                        <i class="ph ph-trend-up"></i> Tip: Track your pattern mastery alongside your problem solving.
+                    </div>
+
+                    <div class="stats-grid-4">
+                        <div class="dashboard-card stat-box">
+                            <div class="stat-icon"><i class="ph ph-file-text text-primary"></i></div>
+                            <div class="stat-content">
+                                <h3 class="stat-val text-primary" id="stat-total">0</h3>
+                                <p class="stat-label">Total Questions</p>
+                            </div>
+                        </div>
+                        <div class="dashboard-card stat-box">
+                            <div class="stat-icon"><i class="ph ph-target" style="color: #fbbf24;"></i></div>
+                            <div class="stat-content">
+                                <h3 class="stat-val" style="color: #fbbf24;" id="stat-remaining">0</h3>
+                                <p class="stat-label">Remaining</p>
+                            </div>
+                        </div>
+                        <div class="dashboard-card stat-box">
+                            <div class="stat-icon"><i class="ph ph-gift text-success"></i></div>
+                            <div class="stat-content">
+                                <h3 class="stat-val text-success" id="stat-completed-hero">0</h3>
+                                <p class="stat-label">Completed</p>
+                            </div>
+                        </div>
+                        <div class="dashboard-card stat-box">
+                            <div class="stat-icon"><i class="ph ph-trend-up text-danger"></i></div>
+                            <div class="stat-content">
+                                <h3 class="stat-val text-danger" id="stat-percentage">0%</h3>
+                                <p class="stat-label">Completion Rate</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card list-card" style="margin-top: 1.5rem;">
+                        <div class="card-header">
+                            <h3>Problem Set</h3>
+                            <div class="list-filters">
+                                <div class="search-bar">
+                                    <i class="ph ph-magnifying-glass"></i>
+                                    <input type="text" id="search-input" placeholder="Search problems, patterns...">
+                                </div>
+                                <select id="pattern-filter" class="custom-select-small">
+                                    <option value="all">All Patterns</option>
+                                </select>
+                                <select id="status-filter" class="custom-select-small">
+                                    <option value="all">All Status</option>
+                                    <option value="completed">Completed</option>
+                                    <option value="uncompleted">Not Completed</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="questions-board" id="questions-container">
+                            <!-- Questions will be dynamically inserted here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View: Analytics -->
+                <div id="view-analytics" class="dashboard-view hidden">
+                    <div class="dashboard-header">
+                        <div>
+                            <h1>Analytics & Progress</h1>
+                            <p class="subtitle">Deep dive into your journey.</p>
+                        </div>
+                        <div class="dashboard-actions">
+                            <button id="btn-export" class="btn btn-secondary"><i class="ph ph-export"></i> Backup</button>
+                            <label class="btn btn-secondary" style="margin: 0; cursor: pointer;">
+                                <i class="ph ph-import"></i> Import
+                                <input type="file" id="btn-import" accept=".json" style="display: none;">
+                            </label>
+                        </div>
+                    </div>
+
+                    <section class="analytics-grid-top">
+                        <!-- Progress Graphic Card -->
+                        <div class="dashboard-card hero-card">
+                            <div class="hero-content">
+                                <h3>Keep it up!</h3>
+                                <p>You've completed <strong id="stat-completed-hero">0</strong> questions so far.</p>
+                                <div class="hero-stats">
+                                    <div><span class="label">Total</span><span class="value" id="stat-total">0</span></div>
+                                    <div><span class="label">Remaining</span><span class="value" id="stat-remaining">0</span></div>
+                                </div>
+                            </div>
+                            <div class="hero-bg-accent"></div>
+                        </div>
+
+                        <!-- Timeline Chart Card -->
+                        <div class="dashboard-card timeline-card">
+                            <div class="card-header">
+                                <h3>Completion Timeline</h3>
+                                <button class="icon-btn-small"><i class="ph ph-arrows-out"></i></button>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="timelineChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Donut Chart Card -->
+                        <div class="dashboard-card donut-card">
+                            <div class="card-header">
+                                <h3>Overall Status</h3>
+                                <button class="icon-btn-small"><i class="ph ph-arrows-out"></i></button>
+                            </div>
+                            <div class="chart-container donut-container">
+                                <canvas id="statusChart"></canvas>
+                                <div class="donut-center">
+                                    <h2 id="stat-percentage">0%</h2>
+                                    <span>Done</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="analytics-grid-bottom">
+                        <!-- Pattern Performance Bar Chart -->
+                        <div class="dashboard-card patterns-card">
+                            <div class="card-header">
+                                <h3>Pattern Performance</h3>
+                                <button class="icon-btn-small"><i class="ph ph-arrows-out"></i></button>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="patternChart"></canvas>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+            </div>
+            
+            <!-- Global States (Dashboard inner) -->
+            <div id="loading-data" class="global-state hidden">
+                <i class="ph ph-spinner-gap spin large-icon"></i>
+            </div>
+            
+            <!-- Notes Modal -->
+            <div id="notes-modal" class="modal hidden">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 id="notes-modal-title">Question Notes</h3>
+                        <button class="icon-btn" id="btn-close-notes"><i class="ph ph-x"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <textarea id="notes-modal-textarea" class="notes-textarea" placeholder="Write your approach or catch here..."></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <span id="notes-saving-indicator" class="saving-indicator hidden"><i class="ph ph-spinner-gap spin"></i></span>
+                        <button class="btn btn-secondary" id="btn-cancel-notes">Cancel</button>
+                        <button class="btn btn-primary" id="btn-save-notes">Save Notes</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Modal -->
+            <div id="profile-modal" class="modal hidden">
+                <div class="modal-content profile-modal-content">
+                    <div class="modal-header">
+                        <h3>Your Profile</h3>
+                        <button class="icon-btn" id="btn-close-profile"><i class="ph ph-x"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <label for="profile-name-input">Display Name</label>
+                        <input type="text" id="profile-name-input" class="search-input" style="width: 100%; margin-top: 0.5rem; margin-bottom: 1.5rem;" placeholder="e.g. John Doe">
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid var(--border-light);">
+                            <button class="btn btn-danger-outline" id="btn-logout-modal"><i class="ph ph-sign-out"></i> Sign Out</button>
+                            <button class="btn btn-primary" id="btn-save-profile">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script type="module" src="app.js?v=5"></script>
+</body>
+</html>

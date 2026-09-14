@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA Tracker Companion</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+    <div id="app" class="extension-layout">
+        <!-- Header -->
+        <header class="topbar">
+            <div class="logo">
+                <i class="ph-fill ph-code"></i>
+                <span>DSA Tracker</span>
+            </div>
+            
+            <div id="auth-section" class="auth-container">
+                <div id="loading-auth" class="auth-state">
+                    <i class="ph ph-spinner-gap spin"></i>
+                </div>
+                <div id="unauthenticated" class="auth-state hidden">
+                    <button id="btn-login" class="btn btn-primary btn-sm">
+                        <i class="ph ph-google-logo"></i> Sign In
+                    </button>
+                </div>
+                <div id="authenticated" class="auth-state hidden">
+                    <button id="btn-logout" class="btn btn-icon btn-sm" title="Sign Out">
+                        <i class="ph ph-sign-out"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main id="main-content" class="hidden">
+            <!-- Active Problem Context -->
+            <section id="current-question-section" class="hidden current-question-card glass-panel">
+                <div class="current-header">
+                    <div class="pulse-indicator"></div>
+                    <span class="current-badge">Active Tab</span>
+                </div>
+                <h3 id="current-name" class="current-title"></h3>
+                <p id="current-pattern" class="current-pattern"></p>
+                <div class="current-actions">
+                    <span id="current-saving" class="saving-indicator hidden"><i class="ph ph-spinner-gap spin"></i></span>
+                    <button id="btn-toggle-current" class="status-btn btn-full">
+                        Loading...
+                    </button>
+                </div>
+            </section>
+
+            <!-- Tools -->
+            <section class="tools-section">
+                <div class="search-bar">
+                    <i class="ph ph-magnifying-glass"></i>
+                    <input type="text" id="search-input" placeholder="Search...">
+                </div>
+                
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <i class="ph ph-funnel"></i>
+                        <select id="pattern-filter" class="custom-select">
+                            <option value="all">All Patterns</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="action-grid">
+                    <button id="btn-next-unsolved" class="btn btn-secondary">
+                        <i class="ph ph-arrow-square-out"></i> Next Unsolved
+                    </button>
+                    <button id="btn-refresh" class="btn btn-secondary">
+                        <i class="ph ph-arrows-clockwise"></i> Refresh
+                    </button>
+                </div>
+            </section>
+
+            <!-- Global States -->
+            <section id="loading-data" class="global-state hidden">
+                <i class="ph ph-spinner-gap spin large-icon"></i>
+                <p>Syncing...</p>
+            </section>
+            <section id="error-message" class="error-toast hidden"></section>
+
+            <!-- List -->
+            <section id="questions-container" class="questions-list scroll-area">
+                <!-- Questions injected here -->
+            </section>
+        </main>
+        
+        <div id="login-prompt" class="login-prompt hidden">
+            <div class="glass-prompt">
+                <i class="ph-fill ph-lock-key lock-icon"></i>
+                <h2>Sync Required</h2>
+                <p>Sign in to sync your progress with the web dashboard.</p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="sidepanel.js"></script>
+</body>
+</html>
