@@ -1,6 +1,6 @@
-import { config } from './config.js?v=3';
-import { parseCSV } from './parser.js?v=3';
-import { normalizeQuestions } from './questions.js?v=3';
+import { config } from './config.js';
+import { parseCSV } from './parser.js';
+import { normalizeQuestions } from './questions.js';
 
 /**
  * Fetches the Google Sheet as CSV and returns normalized questions.

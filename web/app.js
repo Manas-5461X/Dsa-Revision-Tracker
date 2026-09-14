@@ -1,6 +1,6 @@
-import { signInWithGoogle, signOutUser, subscribeToAuthState } from '../shared/auth.js?v=3';
-import { fetchSheetQuestions } from '../shared/sheet.js?v=3';
-import { updateProgress, setProgress, subscribeToProgress, getUserProfile, saveUserProfile } from '../shared/firestore.js?v=3';
+import { signInWithGoogle, signOutUser, subscribeToAuthState } from '../shared/auth.js';
+import { fetchSheetQuestions } from '../shared/sheet.js';
+import { updateProgress, setProgress, subscribeToProgress, getUserProfile, saveUserProfile } from '../shared/firestore.js';
 
 // State
 let questions = [];
