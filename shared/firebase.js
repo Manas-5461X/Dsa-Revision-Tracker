@@ -1,7 +1,7 @@
 import { config } from './config.js';
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js';
-import { getAuth } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
-import { getFirestore, enableIndexedDbPersistence } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
+import { initializeApp } from './lib/firebase-app.js';
+import { getAuth } from './lib/firebase-auth.js';
+import { getFirestore, enableIndexedDbPersistence } from './lib/firebase-firestore.js';
 
 // Initialize Firebase
 const app = initializeApp(config.firebaseConfig);

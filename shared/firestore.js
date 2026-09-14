@@ -7,7 +7,7 @@ import {
     getDocs, 
     onSnapshot,
     serverTimestamp
-} from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
+} from './lib/firebase-firestore.js';
 
 /**
  * Helper to get the authenticated user's progress document reference.

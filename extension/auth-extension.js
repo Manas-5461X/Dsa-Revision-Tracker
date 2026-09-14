@@ -4,7 +4,7 @@ import {
     signInWithCredential, 
     signOut, 
     onAuthStateChanged 
-} from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
+} from '../shared/lib/firebase-auth.js';
 
 export function getCurrentUser() {
     return auth.currentUser;
