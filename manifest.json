@@ -28,8 +28,8 @@
   "commands": {
     "_execute_action": {
       "suggested_key": {
-        "default": "Ctrl+Shift+D",
-        "mac": "MacCtrl+Shift+D"
+        "default": "Ctrl+Comma",
+        "mac": "MacCtrl+Comma"
       },
       "description": "Open DSA Tracker side panel"
     }
