@@ -16,11 +16,11 @@
     ]
   },
   "background": {
-    "service_worker": "background.js",
+    "service_worker": "extension/background.js",
     "type": "module"
   },
   "side_panel": {
-    "default_path": "sidepanel.html"
+    "default_path": "extension/sidepanel.html"
   },
   "action": {
     "default_title": "Open DSA Tracker"
