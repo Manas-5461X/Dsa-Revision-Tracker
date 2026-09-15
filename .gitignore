@@ -32,3 +32,6 @@ node_modules/
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Ignore config with API keys
+shared/config.js

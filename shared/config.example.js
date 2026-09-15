@@ -7,18 +7,18 @@
  */
 export const config = {
     // Replace with your Google Sheet ID (from the URL)
-    SHEET_ID: '1T5-nGsJ9WNwna44e9WWRD0jlZIT5KxVOGvylcvvVrY8',
+    SHEET_ID: 'YOUR_SHEET_ID_HERE',
     // Replace with your Sheet GID (from the URL, usually 0)
     SHEET_GID: '0',
     
     // Replace with your Firebase configuration object
     firebaseConfig: {
-        apiKey: "AIzaSyBmnzab9EcsvhSmDWzdvu5FzV8vDYK1eYs",
-        authDomain: "dsa-tracker-1b981.firebaseapp.com",
-        projectId: "dsa-tracker-1b981",
-        storageBucket: "dsa-tracker-1b981.firebasestorage.app",
-        messagingSenderId: "904583871536",
-        appId: "1:904583871536:web:66be1b0989817710b5c1f5",
-        measurementId: "G-WWBCS8PK5R"
+        apiKey: "YOUR_API_KEY_HERE",
+        authDomain: "YOUR_AUTH_DOMAIN_HERE",
+        projectId: "YOUR_PROJECT_ID_HERE",
+        storageBucket: "YOUR_STORAGE_BUCKET_HERE",
+        messagingSenderId: "YOUR_MESSAGING_SENDER_ID_HERE",
+        appId: "YOUR_APP_ID_HERE",
+        measurementId: "YOUR_MEASUREMENT_ID_HERE"
     }
 };
