@@ -15,12 +15,19 @@ export function getCurrentUser() {
  */
 export async function signInWithGoogle() {
     return new Promise((resolve, reject) => {
-        chrome.identity.getAuthToken({ interactive: true }, (token) => {
-            if (chrome.runtime.lastError || !token) {
-                return reject(new Error(chrome.runtime.lastError?.message || 'Failed to get auth token'));
+        chrome.runtime.sendMessage({ action: 'login' }, (response) => {
+            if (chrome.runtime.lastError) {
+                return reject(new Error(chrome.runtime.lastError.message));
             }
+            if (response && response.error) {
+                return reject(new Error(response.error));
+            }
+            if (!response || !response.token) {
+                return reject(new Error('Failed to get auth token from background script'));
+            }
+            
             // Use the token to authenticate with Firebase
-            const credential = GoogleAuthProvider.credential(null, token);
+            const credential = GoogleAuthProvider.credential(null, response.token);
             signInWithCredential(auth, credential)
                 .then(resolve)
                 .catch(reject);
