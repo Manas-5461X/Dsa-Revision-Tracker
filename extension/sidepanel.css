@@ -195,36 +195,64 @@ main {
 .current-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem; color: #ffffff; }
 .current-pattern { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.25rem; }
 
-/* Status Toggle Button */
-.status-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.7rem;
+/* Status Toggle & Custom Selects */
+select.status-select, select.custom-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: rgba(15, 23, 42, 0.4);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 0.6rem 2rem 0.6rem 1rem;
     border-radius: var(--radius-sm);
-    font-size: 0.9rem;
     font-weight: 600;
-    border: 1px solid transparent;
+    font-size: 0.85rem;
     cursor: pointer;
-    transition: all 0.2s ease;
     width: 100%;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%2394a3b8" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 0.5rem top 50%;
+    transition: all 0.2s ease;
 }
 
-.status-btn.done {
-    background: var(--success-bg);
+select.status-select:hover, select.custom-select:hover {
+    border-color: rgba(255,255,255,0.2);
+    background-color: rgba(30, 41, 59, 0.8);
+}
+
+select.status-select:focus, select.custom-select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(99,102,241,0.2);
+}
+
+/* State colors */
+select.status-done {
+    background-color: var(--success-bg);
     color: var(--success);
     border-color: rgba(16, 185, 129, 0.3);
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%2310b981" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
 }
-.status-btn.done:hover { background: var(--success); color: white; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+select.status-done:hover { box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); border-color: var(--success); }
 
-.status-btn.not-done {
-    background: rgba(255,255,255,0.05);
-    color: var(--text-secondary);
-    border-color: var(--border-color);
+select.status-attempted {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+    border-color: rgba(245, 158, 11, 0.3);
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23f59e0b" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
 }
-.status-btn.not-done:hover {
-    background: rgba(255,255,255,0.1);
+select.status-attempted:hover { box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2); border-color: #f59e0b; }
+
+select.status-not-done {
+    background: rgba(255,255,255,0.03);
+    color: var(--text-secondary);
+}
+select.status-not-done:hover {
+    background: rgba(255,255,255,0.08);
+    color: var(--text-primary);
+}
+
+select option {
+    background-color: var(--bg-surface);
     color: var(--text-primary);
 }
 
