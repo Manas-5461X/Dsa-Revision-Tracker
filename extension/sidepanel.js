@@ -15,6 +15,7 @@ const els = {
     auth: document.getElementById('authenticated'),
     userEmail: document.getElementById('user-email'),
     btnLogin: document.getElementById('btn-login'),
+    btnLoginPrompt: document.getElementById('btn-login-prompt'),
     btnLogout: document.getElementById('btn-logout'),
     
     mainContent: document.getElementById('main-content'),
@@ -38,6 +39,9 @@ const els = {
 
 function init() {
     els.btnLogin.addEventListener('click', handleLogin);
+    if (els.btnLoginPrompt) {
+        els.btnLoginPrompt.addEventListener('click', handleLogin);
+    }
     els.btnLogout.addEventListener('click', handleLogout);
     els.btnRefresh.addEventListener('click', loadData);
     els.btnNextUnsolved.addEventListener('click', openNextUnsolved);
