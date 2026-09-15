@@ -327,7 +327,13 @@ function renderQuestions() {
         const matchesPattern = selectedPattern === 'all' || q.pattern === selectedPattern;
         
         const qStatus = progressMap[q.id]?.status || 'not-done';
-        const matchesStatus = selectedStatus === 'all' ? true : qStatus === selectedStatus;
+        
+        let matchesStatus = true;
+        if (selectedStatus === 'completed') {
+            matchesStatus = qStatus === 'done';
+        } else if (selectedStatus === 'uncompleted') {
+            matchesStatus = qStatus !== 'done';
+        }
                 
         return matchesSearch && matchesPattern && matchesStatus;
     });
