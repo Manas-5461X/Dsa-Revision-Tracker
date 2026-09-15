@@ -285,9 +285,23 @@ main {
 
 .error {
     background-color: rgba(239, 68, 68, 0.1);
-    color: var(--danger-color);
+    color: var(--danger);
     padding: 0.5rem;
     border-radius: 4px;
     font-size: 0.85rem;
     margin-bottom: 1rem;
+}
+
+.error-toast {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    background: var(--danger);
+    color: white;
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    z-index: 100;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }

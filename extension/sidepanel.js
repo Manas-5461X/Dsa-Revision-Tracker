@@ -32,7 +32,8 @@ const els = {
     questionsContainer: document.getElementById('questions-container'),
     
     btnRefresh: document.getElementById('btn-refresh'),
-    btnNextUnsolved: document.getElementById('btn-next-unsolved')
+    btnNextUnsolved: document.getElementById('btn-next-unsolved'),
+    loginPrompt: document.getElementById('login-prompt')
 };
 
 function init() {
@@ -69,14 +70,14 @@ function handleAuthStateChange(user) {
     if (user) {
         els.unauth.classList.add('hidden');
         els.auth.classList.remove('hidden');
-        // els.userEmail.textContent = user.email; // Removed from HTML
-        
+        els.loginPrompt.classList.add('hidden');
         els.mainContent.classList.remove('hidden');
         loadData();
     } else {
         els.auth.classList.add('hidden');
         els.unauth.classList.remove('hidden');
         els.mainContent.classList.add('hidden');
+        els.loginPrompt.classList.remove('hidden');
         
         if (unsubscribeProgress) {
             unsubscribeProgress();
