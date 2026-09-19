@@ -63,9 +63,22 @@ async function handleProblemSolved(url, platform) {
             // Wait for auth to initialize if waking from service worker sleep
             if (!auth.currentUser) {
                 await new Promise((resolve) => {
+                    let isResolved = false;
+                    const timer = setTimeout(() => {
+                        if (!isResolved) {
+                            isResolved = true;
+                            unsubscribe();
+                            resolve(auth.currentUser);
+                        }
+                    }, 3000);
+                    
                     const unsubscribe = auth.onAuthStateChanged((user) => {
-                        unsubscribe();
-                        resolve(user);
+                        if (user && !isResolved) {
+                            isResolved = true;
+                            clearTimeout(timer);
+                            unsubscribe();
+                            resolve(user);
+                        }
                     });
                 });
             }
