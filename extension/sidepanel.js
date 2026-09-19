@@ -205,8 +205,23 @@ function renderQuestions() {
             <div class="question-info">
                 <h4>${q.name}</h4>
                 <p>${q.pattern}</p>
+                ${q.links && q.links.length > 0 ? `
+                <div class="question-links" style="margin-top: 0.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    ${q.links.map((link, idx) => {
+                        // Extract domain name for a nicer label if possible, otherwise use Link 1, etc.
+                        let label = \`Link \${idx + 1}\`;
+                        if (link.includes('leetcode.com')) label = 'LeetCode';
+                        else if (link.includes('geeksforgeeks.org')) label = 'GFG';
+                        else if (link.includes('codingninjas.com')) label = 'Ninja';
+                        
+                        return \`<a href="\${link}" target="_blank" class="link-badge" title="\${link}">
+                            <i class="ph ph-link"></i> \${label}
+                        </a>\`;
+                    }).join('')}
+                </div>
+                ` : ''}
             </div>
-            <div class="question-actions" style="margin-top: 0.5rem; display: flex; align-items: center; justify-content: space-between;">
+            <div class="question-actions" style="margin-top: 0.75rem; display: flex; align-items: center; justify-content: space-between;">
                 <select id="btn-toggle-${q.id}" class="status-select status-${qStatus}">
                     <option value="not-done" ${qStatus === 'not-done' ? 'selected' : ''}>Not Done</option>
                     <option value="attempted" ${qStatus === 'attempted' ? 'selected' : ''}>Attempted</option>
