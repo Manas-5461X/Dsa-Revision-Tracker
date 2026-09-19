@@ -209,14 +209,14 @@ function renderQuestions() {
                 <div class="question-links" style="margin-top: 0.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
                     ${q.links.map((link, idx) => {
                         // Extract domain name for a nicer label if possible, otherwise use Link 1, etc.
-                        let label = \`Link \${idx + 1}\`;
+                        let label = `Link ${idx + 1}`;
                         if (link.includes('leetcode.com')) label = 'LeetCode';
                         else if (link.includes('geeksforgeeks.org')) label = 'GFG';
                         else if (link.includes('codingninjas.com')) label = 'Ninja';
                         
-                        return \`<a href="\${link}" target="_blank" class="link-badge" title="\${link}">
-                            <i class="ph ph-link"></i> \${label}
-                        </a>\`;
+                        return `<a href="${link}" target="_blank" class="link-badge" title="${link}">
+                            <i class="ph ph-link"></i> ${label}
+                        </a>`;
                     }).join('')}
                 </div>
                 ` : ''}
