@@ -124,6 +124,7 @@
                             <p class="subtitle">Your DSA tracking at a glance</p>
                         </div>
                         <div class="dashboard-actions">
+                            <button id="btn-add-question" class="btn btn-primary"><i class="ph ph-plus"></i> Add Question</button>
                             <button id="btn-refresh" class="btn btn-secondary"><i class="ph ph-arrows-clockwise"></i> Sync Data</button>
                         </div>
                     </div>
@@ -297,6 +298,41 @@
                             <button class="btn btn-danger-outline" id="btn-logout-modal"><i class="ph ph-sign-out"></i> Sign Out</button>
                             <button class="btn btn-primary" id="btn-save-profile">Save</button>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Custom Question Modal -->
+            <div id="add-question-modal" class="modal hidden">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 id="add-question-modal-title">Add Custom Question</h3>
+                        <button class="icon-btn" id="btn-close-add-question"><i class="ph ph-x"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label for="custom-q-name" style="display: block; margin-bottom: 0.25rem; font-weight: 500;">Question Name *</label>
+                            <input type="text" id="custom-q-name" class="search-input" style="width: 100%; padding: 0.5rem;" placeholder="e.g. Two Sum">
+                        </div>
+                        
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label for="custom-q-pattern-select" style="display: block; margin-bottom: 0.25rem; font-weight: 500;">Pattern/Topic *</label>
+                            <select id="custom-q-pattern-select" class="custom-select-small" style="width: 100%; padding: 0.5rem; margin-bottom: 0.5rem;">
+                                <!-- Populated dynamically -->
+                            </select>
+                            <input type="text" id="custom-q-pattern-input" class="search-input hidden" style="width: 100%; padding: 0.5rem; margin-bottom: 0.5rem;" placeholder="Enter new pattern name">
+                            <button id="btn-toggle-new-pattern" class="btn btn-secondary" style="width: 100%; font-size: 0.85rem; padding: 0.4rem;"><i class="ph ph-plus"></i> Create New Pattern</button>
+                        </div>
+                        
+                        <div class="form-group" style="margin-bottom: 1.5rem;">
+                            <label for="custom-q-link" style="display: block; margin-bottom: 0.25rem; font-weight: 500;">Link (URL)</label>
+                            <input type="url" id="custom-q-link" class="search-input" style="width: 100%; padding: 0.5rem;" placeholder="https://leetcode.com/problems/...">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <span id="add-q-saving-indicator" class="saving-indicator hidden"><i class="ph ph-spinner-gap spin"></i></span>
+                        <button class="btn btn-secondary" id="btn-cancel-add-question">Cancel</button>
+                        <button class="btn btn-primary" id="btn-save-add-question">Save</button>
                     </div>
                 </div>
             </div>

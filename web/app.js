@@ -1,6 +1,6 @@
 import { signInWithGoogle, signOutUser, subscribeToAuthState } from '../shared/auth.js';
 import { fetchSheetQuestions } from '../shared/sheet.js';
-import { updateProgress, setProgress, subscribeToProgress, getUserProfile, saveUserProfile } from '../shared/firestore.js';
+import { updateProgress, setProgress, subscribeToProgress, getUserProfile, saveUserProfile, addCustomQuestion } from '../shared/firestore.js';
 
 // State
 let questions = [];
@@ -64,7 +64,19 @@ const els = {
     
     btnRefresh: document.getElementById('btn-refresh'),
     btnExport: document.getElementById('btn-export'),
-    btnImport: document.getElementById('btn-import')
+    btnImport: document.getElementById('btn-import'),
+
+    btnAddQuestion: document.getElementById('btn-add-question'),
+    addQuestionModal: document.getElementById('add-question-modal'),
+    btnCloseAddQuestion: document.getElementById('btn-close-add-question'),
+    btnCancelAddQuestion: document.getElementById('btn-cancel-add-question'),
+    btnSaveAddQuestion: document.getElementById('btn-save-add-question'),
+    customQName: document.getElementById('custom-q-name'),
+    customQPatternSelect: document.getElementById('custom-q-pattern-select'),
+    customQPatternInput: document.getElementById('custom-q-pattern-input'),
+    customQLink: document.getElementById('custom-q-link'),
+    btnToggleNewPattern: document.getElementById('btn-toggle-new-pattern'),
+    addQSavingIndicator: document.getElementById('add-q-saving-indicator')
 };
 
 // Initialize
@@ -95,6 +107,12 @@ function init() {
     
     els.btnExport.addEventListener('click', handleExport);
     els.btnImport.addEventListener('change', handleImport);
+
+    els.btnAddQuestion.addEventListener('click', openAddQuestionModal);
+    els.btnCloseAddQuestion.addEventListener('click', closeAddQuestionModal);
+    els.btnCancelAddQuestion.addEventListener('click', closeAddQuestionModal);
+    els.btnSaveAddQuestion.addEventListener('click', handleSaveAddQuestion);
+    els.btnToggleNewPattern.addEventListener('click', toggleNewPatternMode);
 
     subscribeToAuthState(handleAuthStateChange);
 }
@@ -376,9 +394,14 @@ function renderQuestions() {
             let diffBadge = '';
             if (q.difficulty) diffBadge = `<span class="diff-badge diff-${q.difficulty}">${q.difficulty}</span>`;
             
+            let customActions = '';
+            if (q.isCustom) {
+                customActions = `<button class="icon-btn-small btn-delete-custom" data-id="${q.id}" title="Delete Custom Question" style="float: right; color: var(--danger); background: transparent; border: none; cursor: pointer;"><i class="ph-bold ph-trash"></i></button>`;
+            }
+
             item.innerHTML = `
                 <div class="q-card-main">
-                    <h4>${q.name}</h4>
+                    <h4>${q.name} ${customActions}</h4>
                     <div class="q-card-badges">
                         <select class="status-select status-${qStatus}" data-id="${q.id}">
                             <option value="not-done" ${qStatus === 'not-done' ? 'selected' : ''}>Not Done</option>
@@ -417,6 +440,23 @@ function renderQuestions() {
         btn.addEventListener('click', (e) => {
             const id = e.currentTarget.getAttribute('data-id');
             openNotesModal(id);
+        });
+    });
+
+    document.querySelectorAll('.btn-delete-custom').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            const id = e.currentTarget.getAttribute('data-id');
+            if (confirm("Are you sure you want to delete this custom question? This cannot be undone.")) {
+                try {
+                    showLoading(true);
+                    const { deleteCustomQuestion } = await import('../shared/firestore.js');
+                    await deleteCustomQuestion(id);
+                    loadData(); // refresh data
+                } catch (error) {
+                    showLoading(false);
+                    alert("Failed to delete question: " + error.message);
+                }
+            }
         });
     });
 }
@@ -528,6 +568,83 @@ function handleImport(event) {
 function showLoading(show) {
     if (show) els.loadingData.classList.remove('hidden');
     else els.loadingData.classList.add('hidden');
+}
+
+function openAddQuestionModal() {
+    const patterns = new Set(questions.map(q => q.pattern));
+    els.customQPatternSelect.innerHTML = '';
+    Array.from(patterns).sort().forEach(pattern => {
+        const option = document.createElement('option');
+        option.value = pattern;
+        option.textContent = pattern;
+        els.customQPatternSelect.appendChild(option);
+    });
+    
+    els.customQName.value = '';
+    els.customQLink.value = '';
+    els.customQPatternInput.value = '';
+    els.customQPatternInput.classList.add('hidden');
+    els.customQPatternSelect.classList.remove('hidden');
+    els.btnToggleNewPattern.innerHTML = '<i class="ph ph-plus"></i> Create New Pattern';
+    
+    els.addQuestionModal.classList.remove('hidden');
+}
+
+function closeAddQuestionModal() {
+    els.addQuestionModal.classList.add('hidden');
+}
+
+function toggleNewPatternMode() {
+    if (els.customQPatternInput.classList.contains('hidden')) {
+        els.customQPatternInput.classList.remove('hidden');
+        els.customQPatternSelect.classList.add('hidden');
+        els.btnToggleNewPattern.innerHTML = '<i class="ph ph-list"></i> Select Existing Pattern';
+    } else {
+        els.customQPatternInput.classList.add('hidden');
+        els.customQPatternSelect.classList.remove('hidden');
+        els.btnToggleNewPattern.innerHTML = '<i class="ph ph-plus"></i> Create New Pattern';
+    }
+}
+
+async function handleSaveAddQuestion() {
+    const name = els.customQName.value.trim();
+    if (!name) {
+        alert("Question name is required");
+        return;
+    }
+    
+    let pattern = '';
+    if (els.customQPatternInput.classList.contains('hidden')) {
+        pattern = els.customQPatternSelect.value;
+    } else {
+        pattern = els.customQPatternInput.value.trim();
+    }
+    
+    if (!pattern) pattern = 'Uncategorized';
+    
+    const linkStr = els.customQLink.value.trim();
+    const links = linkStr ? [linkStr] : [];
+    
+    els.addQSavingIndicator.classList.remove('hidden');
+    
+    try {
+        await addCustomQuestion({ name, pattern, links });
+        els.addQSavingIndicator.innerHTML = '<i class="ph ph-check" style="color: var(--success)"></i>';
+        setTimeout(() => {
+            closeAddQuestionModal();
+            els.addQSavingIndicator.classList.add('hidden');
+            els.addQSavingIndicator.innerHTML = '<i class="ph ph-spinner-gap spin"></i>';
+            loadData();
+        }, 500);
+    } catch (err) {
+        console.error("Error adding question:", err);
+        alert("Failed to add question: " + err.message);
+        els.addQSavingIndicator.innerHTML = '<i class="ph ph-warning" style="color: var(--danger)"></i>';
+        setTimeout(() => {
+            els.addQSavingIndicator.classList.add('hidden');
+            els.addQSavingIndicator.innerHTML = '<i class="ph ph-spinner-gap spin"></i>';
+        }, 3000);
+    }
 }
 
 init();

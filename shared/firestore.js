@@ -178,3 +178,59 @@ export async function saveUserProfile(displayName) {
     const ref = doc(db, 'users', user.uid, 'profile', 'info');
     await setDoc(ref, { displayName, updatedAt: serverTimestamp() }, { merge: true });
 }
+
+/**
+ * Custom Questions Management
+ */
+export async function getCustomQuestions() {
+    const user = auth.currentUser;
+    if (!user) return [];
+    
+    try {
+        const ref = collection(db, 'users', user.uid, 'custom_questions');
+        const snapshot = await getDocs(ref);
+        const customQuestions = [];
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            customQuestions.push({
+                ...data,
+                id: doc.id,
+                isCustom: true // Flag to identify it's a custom question
+            });
+        });
+        return customQuestions;
+    } catch (error) {
+        console.error("Error getting custom questions:", error);
+        return [];
+    }
+}
+
+export async function addCustomQuestion(questionData) {
+    const user = auth.currentUser;
+    if (!user) throw new Error('User is not authenticated');
+    
+    // Generate a unique ID if not provided (e.g., custom:123456)
+    const id = questionData.id || `custom:${Date.now()}`;
+    const ref = doc(db, 'users', user.uid, 'custom_questions', id);
+    
+    const dataToSave = {
+        name: questionData.name,
+        pattern: questionData.pattern || 'Uncategorized',
+        links: questionData.links || [],
+        createdAt: serverTimestamp()
+    };
+    
+    await setDoc(ref, dataToSave);
+    return id;
+}
+
+export async function deleteCustomQuestion(questionId) {
+    const user = auth.currentUser;
+    if (!user) throw new Error('User is not authenticated');
+    
+    // We import deleteDoc inline to avoid modifying top imports if possible, 
+    // but better to add it to imports. I will use the standard deleteDoc from firebase-firestore.js
+    const { deleteDoc } = await import('./lib/firebase-firestore.js');
+    const ref = doc(db, 'users', user.uid, 'custom_questions', questionId);
+    await deleteDoc(ref);
+}
