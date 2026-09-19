@@ -267,6 +267,18 @@ function updateStatsAndCharts() {
     if(els.qsTotal) els.qsTotal.textContent = total;
     if(els.qsActive) els.qsActive.textContent = completed;
     
+    const analyticsCompleted = document.getElementById('analytics-stat-completed');
+    if(analyticsCompleted) analyticsCompleted.textContent = completed;
+    
+    const analyticsTotal = document.getElementById('analytics-stat-total');
+    if(analyticsTotal) analyticsTotal.textContent = total;
+    
+    const analyticsRemaining = document.getElementById('analytics-stat-remaining');
+    if(analyticsRemaining) analyticsRemaining.textContent = remaining;
+    
+    const analyticsPercentage = document.getElementById('analytics-stat-percentage');
+    if(analyticsPercentage) analyticsPercentage.textContent = percentage + '%';
+    
     renderCharts(completed, remaining);
 }
 
