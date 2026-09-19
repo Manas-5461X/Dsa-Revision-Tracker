@@ -1,3 +1,6 @@
+import { updateProgress } from '../shared/firestore.js';
+import { auth } from '../shared/firebase.js';
+
 // Allows opening side panel on action click
 chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch(console.error);
 
@@ -37,4 +40,43 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         });
         return true; // Keep message channel open for async response
     }
+    
+    if (request.action === 'problem_solved') {
+        handleProblemSolved(request.url, request.platform);
+        return true;
+    }
 });
+
+async function handleProblemSolved(url, platform) {
+    try {
+        let questionId = null;
+        
+        if (platform === 'leetcode' && url.includes('leetcode.com/problems/')) {
+            const match = url.match(/leetcode\.com\/problems\/([^/]+)/);
+            if (match && match[1]) questionId = `leetcode:${match[1]}`;
+        } else if (platform === 'gfg' && url.includes('geeksforgeeks.org/problems/')) {
+            const match = url.match(/geeksforgeeks\.org\/problems\/([^/]+)/);
+            if (match && match[1]) questionId = `gfg:${match[1]}`;
+        }
+        
+        if (questionId) {
+            // Wait for auth to initialize if waking from service worker sleep
+            if (!auth.currentUser) {
+                await new Promise((resolve) => {
+                    const unsubscribe = auth.onAuthStateChanged((user) => {
+                        unsubscribe();
+                        resolve(user);
+                    });
+                });
+            }
+
+            console.log("DSA Tracker: Auto-tracking problem solved:", questionId);
+            await updateProgress(questionId, { status: 'done' });
+            
+            // Notify sidepanel if it's open to refresh its UI immediately
+            chrome.runtime.sendMessage({ action: 'sync_progress' }).catch(() => {});
+        }
+    } catch (error) {
+        console.error("DSA Tracker: Failed to auto-update progress", error);
+    }
+}
