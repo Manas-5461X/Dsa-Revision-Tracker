@@ -17,7 +17,9 @@
         <!-- Header -->
         <header class="topbar">
             <div class="logo">
-                <i class="ph-fill ph-code"></i>
+                <div class="logo-icon-wrapper">
+                    <i class="ph-fill ph-code"></i>
+                </div>
                 <span>DSA Tracker</span>
             </div>
             
@@ -27,12 +29,12 @@
                 </div>
                 <div id="unauthenticated" class="auth-state hidden">
                     <button id="btn-login" class="btn btn-google btn-sm">
-                        <i class="ph-fill ph-google-logo"></i> Sign In
+                        <i class="ph-fill ph-google-logo"></i> <span>Sign In</span>
                     </button>
                 </div>
                 <div id="authenticated" class="auth-state hidden">
-                    <button id="btn-logout" class="btn btn-icon btn-sm" title="Sign Out">
-                        <i class="ph ph-sign-out"></i>
+                    <button id="btn-logout" class="btn btn-logout-glass btn-sm" title="Sign Out">
+                        <i class="ph ph-sign-out"></i> <span>Sign Out</span>
                     </button>
                 </div>
             </div>
@@ -40,7 +42,7 @@
 
         <main id="main-content" class="hidden">
             <!-- Active Problem Context -->
-            <section id="current-question-section" class="hidden current-question-card glass-panel">
+            <section id="current-question-section" class="hidden current-question-card">
                 <div class="current-header">
                     <div class="pulse-indicator"></div>
                     <span class="current-badge">Active Tab</span>
